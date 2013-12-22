@@ -3,9 +3,13 @@
 # the drive amplitude is fixed and the out-of-phase (imaginary) component
 # that does no work on the resonator but varies its frequency is varied.
 
-import numpy as np
-import matplotlib.pyplot as plt
+import sys
+sys.path.append('../common')
 from Constants import Constants
+
+import numpy as np
+import numpy.random as rnd
+import matplotlib.pyplot as plt
 
 # Setup figure defaults
 constants = Constants(printflag = 1)
@@ -23,8 +27,8 @@ meanAngle = np.zeros(91)
 stdAngle = np.zeros(91)
 
 for idx, val in enumerate(phaseRange):
-    magRealNoisy = magReal + std_error*np.random.randn(numTrials,1)
-    magImagNoisy = magImag[idx] + std_error*np.random.randn(numTrials,1)
+    magRealNoisy = magReal + std_error*rnd.randn(numTrials,1)
+    magImagNoisy = magImag[idx] + std_error*rnd.randn(numTrials,1)
     angleNoisy = np.rad2deg(np.arctan(magImagNoisy/magRealNoisy))
 
     meanMag[idx] = np.mean(magRealNoisy)
