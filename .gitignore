@@ -1,0 +1,25 @@
+# PyCharm
+.idea
+
+# Windows/Mac
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# Python
+*.py[co]
+*.egg
+*.egg-info
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+pip-log.txt
+.coverage
+.tox
