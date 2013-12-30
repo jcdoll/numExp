@@ -12,6 +12,7 @@ class PlotHelper:
     def __init__(self, print_flag):
         import matplotlib as mpl
 
+        assert isinstance(print_flag, int)
         self.print_flag = print_flag
 
         # Setup nice colors (use ints and convert to 0-1)
@@ -46,12 +47,12 @@ class PlotHelper:
                                     lightRed, darkBlue, darkGreen, darkOrange, darkRed])
         mpl.rc('savefig', dpi=150)
 
-    def convert_color(self, color_tuple):
+    @staticmethod
+    def convert_color(color_tuple):
         return tuple(x / 255.0 for x in color_tuple)
 
     def print_plot(self, filename):
         import matplotlib.pyplot as plt
 
-        assert isinstance(self.print_flag, int)
         if self.print_flag:
             plt.savefig(filename)
