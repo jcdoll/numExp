@@ -4,15 +4,15 @@
 # that does no work on the resonator but varies its frequency is varied.
 
 # Standard setup
-print_flag = 1
 import numpy as np
 import numpy.random as rnd
 import matplotlib.pyplot as plt
-
 import os
 base_path = os.path.join(os.path.dirname(__file__), "..")
 os.chdir(base_path)
+
 import common
+print_flag = 1
 plot_helper = common.PlotHelper(print_flag)
 
 # User parameters
