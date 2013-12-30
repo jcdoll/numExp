@@ -3,28 +3,32 @@
 # the drive amplitude is fixed and the out-of-phase (imaginary) component
 # that does no work on the resonator but varies its frequency is varied.
 
-import sys
-sys.path.append('../common')
-from Constants import Constants
-
+# Standard setup
+print_flag = 1
 import numpy as np
 import numpy.random as rnd
 import matplotlib.pyplot as plt
 
-# Setup figure defaults
-constants = Constants(printflag = 1)
+import os
+base_path = os.path.join(os.path.dirname(__file__), "..")
+os.chdir(base_path)
+import common
+plot_helper = common.PlotHelper(print_flag)
 
+# User parameters
 magReal = 1
 numTrials = 1e3
 std_error = 0.1
+num_angles = 91
+angle_range = [0, 90]
 
-phaseRange = np.linspace(0, 90, 91)
+phaseRange = np.linspace(angle_range[0], angle_range[1], num_angles)
 magImag = np.tan(np.deg2rad(phaseRange))*magReal
 
-meanMag = np.zeros(91)
-stdMag = np.zeros(91)
-meanAngle = np.zeros(91)
-stdAngle = np.zeros(91)
+meanMag = np.zeros(num_angles)
+stdMag = np.zeros(num_angles)
+meanAngle = np.zeros(num_angles)
+stdAngle = np.zeros(num_angles)
 
 for idx, val in enumerate(phaseRange):
     magRealNoisy = magReal + std_error*rnd.randn(numTrials,1)
@@ -44,24 +48,28 @@ plt.subplot(221)
 plt.plot(phaseRange, meanMag)
 plt.ylabel('Magnitude ($\mu$)')
 plt.ylim(0.99, 1.01)
+plt.xlim(angle_range)
 
 plt.subplot(222)
 plt.plot(phaseRange, stdMag)
 plt.ylabel('Magnitude ($\sigma$)')
 plt.ylim(0.09, 0.11)
+plt.xlim(angle_range)
 
 plt.subplot(223)
 plt.plot(phaseRange, meanAngle)
 plt.xlabel('Phase [$^\circ$]')
 plt.ylabel('Phase ($\mu$)')
 plt.ylim(0, 90)
+plt.xlim(angle_range)
 
 plt.subplot(224)
 plt.plot(phaseRange, stdAngle)
 plt.xlabel('Phase [$^\circ$]')
 plt.ylabel('Phase ($\sigma$)')
 plt.ylim(0, 6)
+plt.xlim(angle_range)
 
-constants.printPlot('images/phaseDeviation')
+plot_helper.print_plot('images/phaseDeviation')
 
 plt.show()
