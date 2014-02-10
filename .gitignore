@@ -23,3 +23,6 @@ develop-eggs/
 pip-log.txt
 .coverage
 .tox
+
+# JuliaStudio
+*.autosave
