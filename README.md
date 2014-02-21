@@ -29,3 +29,6 @@ Simple error propagation uncertainty analysis for the spring constant of a canti
 
 ### power_spectral_density
 Calculate and plot the power spectral density of time series data. The window size and overlap is adjustable in the code, and several plots are generated. Useful for analysing the resolution of MEMS sensors.
+
+## web_suprem
+Everyone loves tsuprem. Too bad you need to run it from the shell. Wouldn't it be great if you could run simple simulations from your browser? This code is built to run on Stanford Linux servers (e.g. hedge.stanford.edu)

@@ -1,0 +1,93 @@
+# All times in minutes, temperatures in C, dimensions in microns
+
+# ===== SIMULATION SETTINGS =====
+option device=ps plot.out=test.ps
+# option device=X
+
+# Piezo dimensions in cm
+assign name=plength n.val=0.0115
+assign name=pwidth n.val=0.0005
+
+# Diffusion parameters
+assign name=initialtemp n.v=800
+assign name=stabilizetime n.v=25
+
+assign name=difframptime n.v=0
+assign name=difftemp n.v=800
+assign name=difftime n.v=30
+
+assign name=oxidramptime n.v=30
+assign name=oxidationtemp n.v=900
+assign name=dryoxtime n.v=5
+assign name=wetoxtime n.v=30
+
+# Setup the mesh
+line x loc=0.0 tag=left 
+line x loc=1.0 tag=right 
+line y loc=0.0 spacing=0.01 tag=top
+line y loc=2.0 spacing=0.01 tag=mid
+line y loc=2.5 spacing=0.10 tag=bottom
+
+# Regions
+region silicon xlo=left xhi=right ylo=top yhi=mid
+region oxide   xlo=left xhi=right ylo=mid yhi=bottom
+
+# Initialize the silicon
+initialize <100> impurity=phosphor i.resistivity=10.0
+
+# Processing
+method vertical pd.full act.trans
+
+# ===== FABRICATION =====
+
+# List the layers
+select z=doping
+print.1d x.val=0 layers
+
+# Diffusion
+# Boron dopant
+# Stabilize, ramp up, dope, purge, ramp down
+diffusion time=@stabilizetime temperat=@initialtemp
+diffusion time=@difframptime temperat=@initialtemp t.final=@difftemp inert
+diffusion time=@difftime temperat=@difftemp boron=1e22 inert
+diffusion time=5 temperat=@difftemp inert
+diffusion time=@difframptime temperat=@difftemp t.final=@initialtemp inert
+
+# Oxidation
+diffusion time=@stabilizetime temperat=@initialtemp
+diffusion time=@oxidramptime temperat=@initialtemp t.final=@oxidationtemp inert
+diffusion time=@dryoxtime temperat=@oxidationtemp dryO2
+diffusion time=@wetoxtime temperat=@oxidationtemp wetO2
+diffusion time=@dryoxtime temperat=@oxidationtemp dryO2
+diffusion time=@oxidramptime temperat=@oxidationtemp t.final=@initialtemp inert
+
+
+select z=log10(abs(doping)) title="Doping Profile"
+plot.1d x.val=0 y.min=13 y.max=21 x.min=0 x.max=5 symbol=12
+
+
+
+# 6. FGA
+diffusion time=120 temperature=400 f.n2=96 f.h2=4
+
+
+# List the layers
+select z=doping
+print.1d x.val=0 layers
+
+
+# ===== ANALYSIS =====
+# Sheet resistance
+electric resistance x.val=0
+
+# Peak doping level
+select z=abs(doping)
+extract silicon x.val=0 maximum val.extr assign name=Np0
+
+# Junction depth
+select z=doping
+extract silicon x.val=0 value=0 d.extrac assign name=Dj
+
+# Plot the doping and save the output ***
+select z=abs(doping)
+print.1d out.file=predep
